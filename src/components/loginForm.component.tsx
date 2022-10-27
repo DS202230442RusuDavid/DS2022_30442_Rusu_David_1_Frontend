@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import Button from '@mui/material/Button';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { login, register } from '../services/auth.service';
 import Role from '../dtos/role.dto';
-import { Route, useHref } from 'react-router-dom';
-import { CheckBox } from '@mui/icons-material';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import User from '../dtos/user.dto';
 
 interface Props {
     page: "login" | "register";
@@ -31,7 +30,6 @@ export default class LoginRegisterForm extends React.Component<Props> {
 
     handleSubmit = async () => {
         this.setState({ submitted: true });
-        const { formData } = this.state;
         if (this.props.page === "login") {
             await this.login();
         } else {
@@ -40,14 +38,13 @@ export default class LoginRegisterForm extends React.Component<Props> {
     }
 
     login = async () => {
-        const rez = await login(this.state.formData.email, this.state.formData.password);
-        console.log(rez);
-        if (rez) {
-            window.location.href = "/home";
-        } else {
-            alert("Wrong credentials");
-            this.setState({ submitted: false });
-        }
+            const rez = await login(this.state.formData.email, this.state.formData.password);
+            if (rez) {
+                window.location.href = "/home";
+            } else {
+                alert("Wrong credentials");
+                this.setState({ submitted: false });
+            }
     }
 
     register = async () => {
@@ -64,13 +61,12 @@ export default class LoginRegisterForm extends React.Component<Props> {
         }
     }
 
-    //TODO: ADD IS ADMIN SELECTOR
-
     render() {
         const { formData, submitted } = this.state;
         return (
             <ValidatorForm
                 onSubmit={this.handleSubmit}
+                style={{ paddingTop: "20px" }}
             >
 
                 <TextValidator
@@ -105,8 +101,8 @@ export default class LoginRegisterForm extends React.Component<Props> {
                             Register
                         </Button>
                         // This checkbox is probably done very stupidly but i got no time to see how to properly do it :(
-                        : <FormControlLabel control={<Checkbox/>} label="Admin" onChange={()=>{this.state.formData.admin = !this.state.formData.admin}}/>
-                        }
+                        : <FormControlLabel control={<Checkbox />} label="Admin" onChange={() => { this.state.formData.admin = !this.state.formData.admin }} />
+                    }
                     <Button
                         color="primary"
                         variant="contained"
