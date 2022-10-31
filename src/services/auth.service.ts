@@ -16,6 +16,7 @@ export const register = async (email: string, password: string, role: Role) => {
     }
 };
 
+
 export const login = async (
     email: string,
     password: string

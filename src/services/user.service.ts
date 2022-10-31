@@ -1,4 +1,5 @@
 import User from "../dtos/user.dto";
+import axios from "axios";
 
 export const getLoggedInUser = () : User => {
     const user = localStorage.getItem("user");
@@ -8,3 +9,39 @@ export const getLoggedInUser = () : User => {
         return {} as User;
     }
 }
+
+export const getAllUsers = async () =>{
+    var config = {
+      method: "post",
+      url: "/user/getUser",
+      data: {},
+    };
+  
+    return axios(config)
+      .then(function (res) {
+        return res.data as User[];
+      })
+      .catch(function (error) {
+        console.log(error);
+        return [];
+      });
+  
+  }
+  
+  export const updateUser = async (user: User) =>{
+    var config = {
+      method: "patch",
+      url: "/user/",
+      data: user,
+    };
+  
+    return axios(config)
+      .then(function (res) {
+        return res.data as User;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return {} as User;
+      });
+  
+  }

@@ -7,6 +7,8 @@ interface Props {
     device: Device,
 }
 
+//TODO, get data from db, add state to this component and pass it to the calander
+
 const getDeviceData = async (device: Device) => {
     //Data will have to be sorted by date
     const data = [
@@ -42,7 +44,6 @@ const DeviceView = (props: Props) => {
 
     const [deviceData, setDeviceData] = React.useState([] as { x: string, y: number }[]);
 
-
     return (
         <div>
             {device.id ?
@@ -51,8 +52,6 @@ const DeviceView = (props: Props) => {
                         <h1>{device.description}</h1>
                     </div>
 
-                    
-                    
                     <div style={{ display: "flex", alignContent: "space-between", flexDirection: "row" }}>
                         <div style={{width:"70%"}}>
                             <BarGraph data={deviceData} />
