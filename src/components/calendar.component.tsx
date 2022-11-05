@@ -5,9 +5,13 @@ import { MuiPickersUtilsProvider, Calendar } from "@material-ui/pickers";
 import green from "@material-ui/core/colors/green";
 import enLocale from "date-fns/locale/en-US";
 import DateFnsUtils from "@date-io/date-fns";
-import { useState } from "react";
 
-const CalendarComp = () => {
+interface Props {
+    setSelectedDate: React.Dispatch<React.SetStateAction<Date>>,
+    selectedDate: Date
+}
+
+const CalendarComp = ({setSelectedDate,selectedDate}: Props) => {
 
     const theme = createTheme({
         palette: {
@@ -19,7 +23,6 @@ const CalendarComp = () => {
         en: enLocale,
       };
 
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const locale = "en";
     const handleDateChange = (date: any) => {
         setSelectedDate(date);

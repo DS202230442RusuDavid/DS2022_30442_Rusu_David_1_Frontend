@@ -45,3 +45,20 @@ export const getAllUsers = async () =>{
       });
   
   }
+
+  export const deleteUser = async (user: User) =>{
+    var config = {
+      method: "delete",
+      url: "/user",
+      data: { id: user.id },
+    };
+  
+    return axios(config)
+      .then(function (res) {
+        return res.status;
+      })
+      .catch(function (error) {
+        console.log(error);
+        return error.response.status;
+      });
+  }

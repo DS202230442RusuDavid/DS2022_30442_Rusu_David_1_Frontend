@@ -10,7 +10,7 @@ import User from '../dtos/user.dto';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Role from '../dtos/role.dto';
 import { Checkbox, FormControlLabel, Paper } from '@mui/material';
-import { updateUser } from '../services/user.service';
+import { deleteUser, updateUser } from '../services/user.service';
 import Device from '../dtos/device.dto';
 import { getAllDevices, getUserDevices as sGetUserDevices, updateDevice } from '../services/device.service';
 import { useEffect, useState } from 'react';
@@ -71,6 +71,17 @@ const UserDialog = (props: Props) => {
         const index: 'email' = event.target.name;
         formData.formData[index] = event.target.value;
         setFormData({ ...formData, formData: formData.formData });
+    }
+
+    const handleDelete = async () => {
+        const rez = await deleteUser(props.user);
+        if(rez == 200) {
+            props.setSelectedUser({} as User);
+            setFormData({ ...formData, opened: false });
+            alert("User deleted");
+        }else{
+            alert('Error');
+        }
     }
 
     const handleClose = () => {
@@ -155,6 +166,14 @@ const UserDialog = (props: Props) => {
                             disabled={formData.submitted}
                         >
                             Submit
+                        </Button>
+                        
+                        <Button
+                            color="error"
+                            variant="contained"
+                            onClick={handleDelete}
+                        >
+                            Delete User
                         </Button>
 
                     </ValidatorForm>
