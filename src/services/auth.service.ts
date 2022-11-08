@@ -23,7 +23,7 @@ export const login = async (
     ) => {
     try {
         const res = await axios.post(
-            `http://localhost:3001/authentication/log-in`,
+            "/authentication/log-in",
             { email, password },
             { withCredentials: true }
         );
@@ -38,7 +38,7 @@ export const login = async (
 
 export const logout = async () => {
     try {
-        const res = await axios.post(`/authentication/log-out`, {
+        const res = await axios.post("/authentication/log-out", {
             withCredentials: true,
         });
         localStorage.setItem("user","{}")
