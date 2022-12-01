@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
 import { getUserDevices } from "../services/device.service";
 
-const socket = io();
+const socket = io(process.env.websocket || "");
 
 const DeviceConsumptionPopUp =  () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
