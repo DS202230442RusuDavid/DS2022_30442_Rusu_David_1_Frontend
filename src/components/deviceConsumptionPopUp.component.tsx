@@ -1,12 +1,26 @@
 import Device from "../dtos/device.dto";
 import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
+import { getUserDevices } from "../services/device.service";
 
 const socket = io();
 
-const DeviceConsumptionPopUp = () => {
+const DeviceConsumptionPopUp =  () => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     const [isConnected, setIsConnected] = useState(socket.connected);
-  
+    let devices : Device[] = [];
+
+    useEffect(() => {
+      const fetchData = async () => {
+          devices = await getUserDevices(user);
+      }
+      fetchData();
+  }, []);
+
+    //future improvement: only show alerts for devices that are in the user's list
+    const alerts : [{
+        deviceId: number,
+    }] = [{deviceId:-1}];
     useEffect(() => {
       socket.on('connect', () => {
         setIsConnected(true);
@@ -17,25 +31,24 @@ const DeviceConsumptionPopUp = () => {
       });
   
       socket.on('alert', msg => {
+        //
         console.log(msg);
+        //see if device is not in the alerts array and belongs to the user
+        const device = !alerts.find((device) => device.deviceId === msg.deviceId) && devices.find((device) => device.id === msg.deviceId);
+        if(device){
+          alert("device " + msg.deviceId + " has consumed " + msg.hourlyConsumption + "kw in the last hour!");
+        }
+        alerts.push(msg);
       });
-  
-      return () => {
-        socket.off('connect');
-        socket.off('disconnect');
-        socket.off('pong');
-      };
+
+      //every hour clear the alerts array
+      setInterval(() => {
+        alerts.splice(0,alerts.length);
+      }, 3600000);
     }, []);
-  
-    const sendPing = () => {
-      socket.emit("message",'ping');
-    }
   
     return (
       <div>
-        <p>Connected: { '' + isConnected }</p>
-        
-        <button onClick={ sendPing }>Send ping</button>
       </div>
     );
 }
